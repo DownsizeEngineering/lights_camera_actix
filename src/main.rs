@@ -1,15 +1,21 @@
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, get};
+use listenfd::ListenFd;
+
 #[actix_rt::main]
 async fn main() -> std::io::Result<()>{
-    HttpServer::new(|| {
-        App::new()
-            .route("/", web::get().to(index))
-            .route("/universe", web::get().to(index2))
-            .service(index3)
-    })
-    .bind("127.0.0.1:8888")?
-    .run()
-    .await
+    let mut listenfd = ListenFd::from_env();
+    let mut server = HttpServer::new(|| {
+        App::new().service(
+            web::scope("/app").route("/index.html", web::get().to(index)),
+        )
+    });
+
+    server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
+        server.listen(l)?
+    } else {
+        server.bind("127.0.0.1:8888")?
+    };
+    server.run().await
 }
 
 async fn index() -> impl Responder {
