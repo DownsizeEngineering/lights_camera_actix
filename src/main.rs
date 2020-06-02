@@ -18,7 +18,7 @@ async fn main() -> std::io::Result<()>{
                 web::scope("/app").route("/index.html", web::get().to(index))
                 .service(index3),
             )
-            .route("/requests", web::get().to(request_count))
+            .configure(config_request_count)
     });
 
     server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
@@ -55,4 +55,11 @@ async fn request_count(data: web::Data<AppStateWithCounter>) -> String {
     *counter += 1;
 
     format!("Request #{}", counter)
+}
+
+fn config_request_count(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::resource("/requests")
+        .route(web::get().to(request_count)),
+    );
 }
