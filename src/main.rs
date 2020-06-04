@@ -2,6 +2,8 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder, get};
 use listenfd::ListenFd;
 use std::sync::{Mutex};
 
+mod request_count;
+
 #[actix_rt::main]
 async fn main() -> std::io::Result<()>{
     let counter = web::Data::new(AppStateWithCounter{
@@ -18,7 +20,7 @@ async fn main() -> std::io::Result<()>{
                 web::scope("/app").route("/index.html", web::get().to(index))
                 .service(index3),
             )
-            .configure(config_request_count)
+            .configure(request_count::config_request_count)
     });
 
     server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
@@ -48,18 +50,4 @@ async fn index2() -> impl Responder {
 #[get("/hi")]
 async fn index3() -> impl Responder {
     HttpResponse::Ok().body("Hi user!")
-}
-
-async fn request_count(data: web::Data<AppStateWithCounter>) -> String {
-    let mut counter = data.counter.lock().unwrap();
-    *counter += 1;
-
-    format!("Request #{}", counter)
-}
-
-fn config_request_count(cfg: &mut web::ServiceConfig) {
-    cfg.service(
-        web::resource("/requests")
-        .route(web::get().to(request_count)),
-    );
 }
