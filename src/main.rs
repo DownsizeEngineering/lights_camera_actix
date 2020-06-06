@@ -1,4 +1,4 @@
-use actix_web::{web, App, HttpResponse, HttpServer, Responder, get};
+use actix_web::{web, App, HttpResponse, HttpServer, Responder, get, Result};
 use listenfd::ListenFd;
 use std::sync::{Mutex};
 
@@ -21,6 +21,7 @@ async fn main() -> std::io::Result<()>{
                 .service(index3),
             )
             .configure(request_count::config_request_count)
+            .route("hello/{name}/{greeting}", web::get().to(url_parser))
     });
 
     server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
@@ -50,4 +51,8 @@ async fn index2() -> impl Responder {
 #[get("/hi")]
 async fn index3() -> impl Responder {
     HttpResponse::Ok().body("Hi user!")
+}
+
+async fn url_parser(info: web::Path<(String, String)>) -> Result<String> {
+    Ok(format!("{}, {}!", info.1, info.0))
 }
