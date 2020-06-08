@@ -1,4 +1,5 @@
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, get, Result};
+use actix_files as fs;
 use listenfd::ListenFd;
 use std::sync::{Mutex};
 use serde::Deserialize;
@@ -23,6 +24,9 @@ async fn main() -> std::io::Result<()>{
             )
             .configure(request_count::config_request_count)
             .route("hello/{name}/{greeting}", web::get().to(url_parser))
+            .service(fs::Files::new("/", "./client/public")
+                .index_file("index.html")
+            )
     });
 
     server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
