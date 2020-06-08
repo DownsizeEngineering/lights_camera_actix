@@ -1,6 +1,7 @@
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, get, Result};
 use listenfd::ListenFd;
 use std::sync::{Mutex};
+use serde::Deserialize;
 
 mod request_count;
 
@@ -53,6 +54,13 @@ async fn index3() -> impl Responder {
     HttpResponse::Ok().body("Hi user!")
 }
 
-async fn url_parser(info: web::Path<(String, String)>) -> Result<String> {
-    Ok(format!("{}, {}!", info.1, info.0))
+#[derive(Deserialize)]
+struct Greeting {
+    name: String,
+    greeting: String
+}
+
+
+async fn url_parser(info: web::Path<Greeting>) -> Result<String> {
+    Ok(format!("{}, {}!", info.greeting, info.name))
 }
