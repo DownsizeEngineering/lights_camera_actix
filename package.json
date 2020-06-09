@@ -1,0 +1,27 @@
+{
+  "name": "lights_camera_actix",
+  "version": "1.0.0",
+  "description": "An actix webserver serving svelte components",
+  "main": "cargo run",
+  "dependencies": {},
+  "devDependencies": {
+    "svelte": "^3.23.0",
+    "svelte-loader": "^2.13.6",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "scripts": {
+    "test": "cargo test",
+    "wp": "npx webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DownsizeEngineering/lights_camera_actix.git"
+  },
+  "author": "Peter Shoaf",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DownsizeEngineering/lights_camera_actix/issues"
+  },
+  "homepage": "https://github.com/DownsizeEngineering/lights_camera_actix#readme"
+}
