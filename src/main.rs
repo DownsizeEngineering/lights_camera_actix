@@ -1,12 +1,7 @@
-use actix::prelude::*;
-use actix_web::{web, App, HttpResponse, HttpServer, Responder, get, Result};
+use actix_web::{web, App, HttpServer};
 use actix_files as fs;
 use listenfd::ListenFd;
 use std::sync::{Mutex};
-use serde::Deserialize;
-use actix_postgres::{bb8_postgres::tokio_postgres::tls::NoTls,
-    PostgresActor, PostgresMessage
-};
 
 mod request_count;
 mod endpoints;

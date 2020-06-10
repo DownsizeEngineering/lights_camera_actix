@@ -1,4 +1,8 @@
-use super::*;
+use actix_postgres::{bb8_postgres::tokio_postgres::tls::NoTls,
+    PostgresActor, PostgresMessage
+};
+use actix_web::{HttpResponse, Responder};
+use serde::Deserialize;
 
 #[derive(Deserialize)]
 struct DBCredentials {

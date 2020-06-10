@@ -1,12 +1,14 @@
-use super::*;
+use serde::Deserialize;
+use actix_web::{HttpResponse, Responder, web, Result, get};
+use super::AppState;
 
 pub async fn index(data: web::Data<AppState>) -> impl Responder {
     let app_name = &data.app_name;
     HttpResponse::Ok().body(format!("Hello {}!", app_name))
 }
-pub async fn index2() -> impl Responder {
-    HttpResponse::Ok().body("Hello Universe!")
-}
+// pub async fn index2() -> impl Responder {
+//     HttpResponse::Ok().body("Hello Universe!")
+// }
 
 #[get("/hi")]
 pub async fn index3() -> impl Responder {
