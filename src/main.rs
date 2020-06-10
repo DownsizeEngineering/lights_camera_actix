@@ -115,6 +115,5 @@ async fn pg () -> String{
 
 async fn names() -> impl Responder {
     let val = pg().await;
-    println!("pg got {}", val);
-    HttpResponse::Ok().body("names")
+    HttpResponse::Ok().body(val)
 }
