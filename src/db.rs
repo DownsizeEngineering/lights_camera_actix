@@ -1,8 +1,9 @@
 use actix::prelude::*;
 use actix_postgres::{PostgresActor, PostgresMessage};
-use actix_web::{HttpResponse, Responder};
+use actix_web::{web, HttpResponse, Responder};
 use serde::Deserialize;
 use actix_postgres::bb8_postgres::tokio_postgres::{tls::NoTls, row::Row};
+use super::AppState;
 
 #[derive(Deserialize)]
 struct DBCredentials {
@@ -11,7 +12,9 @@ struct DBCredentials {
     password: String,
 }
 
-pub fn get_actor() -> Addr<PostgresActor<NoTls>> {
+pub type PGA = Addr<PostgresActor<NoTls>>;
+
+pub fn get_actor() -> PGA {
     let db_cred: DBCredentials = serde_json::from_str(
         &std::fs::read_to_string("./secrets.json").unwrap()
     ).unwrap();
@@ -22,7 +25,7 @@ pub fn get_actor() -> Addr<PostgresActor<NoTls>> {
     PostgresActor::start(&db_url, NoTls).unwrap() 
 }
 
-async fn pg_query (query: &str) -> Vec<Row> {
+async fn pg_query (db: &PGA, query: &str) -> Vec<Row> {
     let q = String::from(query);
     let task: PostgresMessage<_, NoTls, _> = PostgresMessage::new(|pool| {
         Box::pin(async move {
@@ -33,7 +36,7 @@ async fn pg_query (query: &str) -> Vec<Row> {
                 .map_err(|err| err.into())
         })
     });
-    let res = get_actor().send(task).await.unwrap().unwrap();
+    let res = db.send(task).await.unwrap().unwrap();
     res
 }
 
@@ -43,8 +46,9 @@ struct User {
     id: i32,
 }
 
-pub async fn names() -> impl Responder {
-    let res = pg_query("SELECT * FROM names").await;
+pub async fn names(data: web::Data<AppState>) -> impl Responder {
+    let db = &data.db;
+    let res = pg_query(db, "SELECT * FROM names").await;
 
     let val= User {
         name: res[0].get(0),

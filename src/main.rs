@@ -13,12 +13,14 @@ async fn main() -> std::io::Result<()>{
     let counter = web::Data::new(AppStateWithCounter{
         counter: Mutex::new(0),
     });
+
     let mut listenfd = ListenFd::from_env();
     let mut server = HttpServer::new(move || {
         App::new()
             .app_data(counter.clone())
             .data(AppState{
                 app_name: String::from("lights_camera_actix"),
+                db: db::get_actor(),
             })
             .service(
                 web::scope("/app").route("/index.html", web::get().
@@ -45,6 +47,7 @@ async fn main() -> std::io::Result<()>{
 
 pub struct AppState {
     app_name: String,
+    db: db::PGA,
 }
 
 struct AppStateWithCounter {
