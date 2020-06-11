@@ -3,7 +3,6 @@ use actix_postgres::{PostgresActor, PostgresMessage};
 use actix_web::{web, HttpResponse, Responder};
 use serde::Deserialize;
 use actix_postgres::bb8_postgres::tokio_postgres::{tls::NoTls, row::Row};
-use super::AppState;
 
 #[derive(Deserialize)]
 struct DBCredentials {
@@ -46,9 +45,8 @@ struct User {
     id: i32,
 }
 
-pub async fn names(data: web::Data<AppState>) -> impl Responder {
-    let db = &data.db;
-    let res = pg_query(db, "SELECT * FROM names").await;
+pub async fn names(db: web::Data<PGA>) -> impl Responder {
+    let res = pg_query(db.get_ref(), "SELECT * FROM names").await;
 
     let val= User {
         name: res[0].get(0),
