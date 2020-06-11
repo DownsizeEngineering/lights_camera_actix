@@ -34,8 +34,6 @@ async fn pg_query (query: &str) -> Vec<Row> {
         })
     });
     let res = get_actor().send(task).await.unwrap().unwrap();
-    // let val:&str = res[0].get(0);
-    // val.to_string()
     res
 }
 
