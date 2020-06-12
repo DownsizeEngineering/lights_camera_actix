@@ -20,7 +20,11 @@ module.exports = {
                 test: /\.(html|svelte)$/,
                 exclude: /node_modules/,
                 use: 'svelte-loader'
-            }
+            },
+            {
+                test: /\.wasm$/,
+                type: "webassembly/experimental"
+            },
         ],
     },
 }
