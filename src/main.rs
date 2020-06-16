@@ -6,6 +6,7 @@ use std::sync::{Mutex};
 mod request_count;
 mod endpoints;
 mod db;
+mod todo;
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()>{
