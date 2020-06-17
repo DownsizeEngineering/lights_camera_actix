@@ -30,6 +30,7 @@ async fn main() -> std::io::Result<()>{
                 to(endpoints::index))
                 .service(endpoints::index3),
             )
+            .configure(todo::config)
             .configure(request_count::config_request_count)
             .route("hello/{name}/{greeting}", web::get().
                 to(endpoints::url_parser))
