@@ -1,6 +1,6 @@
 <script>
+    import List from './List.svelte'
     let string = "Hello World"
-    
 import("../wasm/hello_wasm.js")
     .then(module => {
         module.greet();
