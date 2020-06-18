@@ -1,16 +1,5 @@
 use actix_web::{web, Responder, HttpResponse};
-use crate::db;
-
-// struct TodoList {
-//     name: String,
-//     tasks: Vec<Todo>,
-// }
-
-// struct Todo {
-    //     task: String,
-    //     description: String,
-    //     completed: bool,
-// }
+use crate::db::{todo, PGA};
 
 
 pub fn config(cfg: &mut web::ServiceConfig) {
@@ -37,8 +26,8 @@ async fn new_list() -> impl Responder {
     HttpResponse::Ok().body("new list")
 }
 
-async fn get_all_lists() -> impl Responder {
-    HttpResponse::Ok().body("get all lists")
+async fn get_all_lists(db: web::Data<PGA>) -> impl Responder {
+    todo::get_all_lists(db).await
 }
 
 
