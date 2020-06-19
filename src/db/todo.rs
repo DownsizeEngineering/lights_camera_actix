@@ -1,4 +1,4 @@
-use actix_web::{web, Responder};
+use actix_web::{web, HttpResponse, Responder};
 use super::{pg_query, PGA};
 use serde::Serialize;
 
@@ -45,4 +45,13 @@ pub async fn get_all_lists(db: web::Data<PGA>) -> impl Responder {
     }
 
     web::Json(lists)
+}
+
+pub async fn new_list(db: web::Data<PGA>, list: TodoList) -> impl Responder {
+    let res = pg_query(db.get_ref(), 
+        &format!("INSERT INTO done.lists (name) VALUES ('{}') RETURNING (id);", 
+        list.name)
+    ).await;
+    let id: i32 = res[0].get(0);
+    HttpResponse::Ok().body(format!("{}", id))
 }
