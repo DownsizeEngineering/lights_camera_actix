@@ -1,15 +1,15 @@
 use actix_web::{web, HttpResponse, Responder};
 use super::{pg_query, PGA};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct TodoList {
     id: i32,
     name: String,
     tasks: Vec<Todo>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Todo {
         id: i32,
         task: String,
