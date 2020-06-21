@@ -10,4 +10,4 @@
 <Todo todo={todo}/>
 {/each}
 </ol>
-<li><NewTodo/></li>
+<NewTodo listId={list.id}/>
