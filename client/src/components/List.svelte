@@ -1,5 +1,6 @@
 <script>
   import Todo from './Todo.svelte';
+  import NewTodo from './NewTodo.svelte';
   export let list;
 </script>
 
@@ -9,3 +10,4 @@
 <Todo todo={todo}/>
 {/each}
 </ol>
+<li><NewTodo/></li>

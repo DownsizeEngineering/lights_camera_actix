@@ -1,5 +1,6 @@
 <script>
-    import List from './List.svelte'
+    import List from './List.svelte';
+    import NewList from './NewList.svelte';
     let string = "Hello World"
     import("../wasm/hello_wasm.js")
         .then(module => {
@@ -15,3 +16,4 @@
 {#each lists as list}
     <List list={list}/>
 {/each}
+<NewList/>
