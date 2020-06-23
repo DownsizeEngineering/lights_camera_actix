@@ -1,5 +1,5 @@
 use actix_web::{web, Responder, HttpResponse};
-use crate::db::{todo, PGA, todo::TodoList};
+use crate::db::{todo, PGA, todo::TodoList, todo::Todo};
 
 
 pub fn config(cfg: &mut web::ServiceConfig) {
@@ -32,8 +32,13 @@ async fn get_all_lists(db: web::Data<PGA>) -> impl Responder {
 }
 
 
-async fn new_todo(info: web::Path<u32>) -> impl Responder {
-    HttpResponse::Ok().body(format!("new todo for list {}", info))
+async fn new_todo(
+    db: web::Data<PGA>, 
+    form: web::Form<Todo>,
+    list_id: web::Path<u32>
+) -> impl Responder {
+    todo::new_todo(db, form.into_inner(), *list_id).await
+    // HttpResponse::Ok().body(format!("new todo for list {}", info))
 }
 
 async fn get_list(info: web::Path<u32>) -> impl Responder {

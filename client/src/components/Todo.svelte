@@ -2,4 +2,4 @@
 export let todo;
 </script>
 
-<li>{todo.name}</li>
+<li>{todo.task}</li>

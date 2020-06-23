@@ -1,13 +1,15 @@
 <script>
-  export let listId;
+  export let post;
   let task = "";
   let details = "";
   const handleSubmit = function() {
-    alert(`sending a new todo named ${task} for list ${listId}!`);
+    // alert(`sending a new todo named ${task} for list ${list.id}!`);
+    post(task, details);
   }
+
 </script> 
 <h1>New Todo:</h1>
-<form on:submit|preventDefault={handleSubmit}>
+<form on:submit|preventDefault={handleSubmit.bind(this)}>
   <label>Name</label>
   <input type="text" bind:value={task}/>
   <br>

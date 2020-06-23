@@ -55,3 +55,24 @@ pub async fn new_list(db: web::Data<PGA>, list: TodoList) -> impl Responder {
     let id: i32 = res[0].get(0);
     HttpResponse::Ok().body(format!("{}", id))
 }
+
+pub async fn new_todo(
+    db: web::Data<PGA>,
+    todo: Todo, 
+    list_id: u32
+) -> impl Responder {
+    println!("new todo");
+    let res = pg_query(db.get_ref(),
+        &format!("INSERT INTO done.todos (task, details, completed, list) 
+            VALUES ({}, {}, {}, {}) RETURNING (id);", 
+            todo.task, 
+            match todo.details {
+                Some(x)=>x,
+                None => String::from("null"),
+            }, 
+            todo.completed, list_id
+        )
+    ).await;
+    let id: i32 = res[0].get(0);
+    HttpResponse::Ok().body(format!("{}", id))
+}
