@@ -34,11 +34,10 @@ async fn get_all_lists(db: web::Data<PGA>) -> impl Responder {
 
 async fn new_todo(
     db: web::Data<PGA>, 
-    form: web::Form<Todo>,
+    todo: web::Query<Todo>,
     list_id: web::Path<u32>
 ) -> impl Responder {
-    todo::new_todo(db, form.into_inner(), *list_id).await
-    // HttpResponse::Ok().body(format!("new todo for list {}", info))
+    todo::new_todo(db, todo.into_inner(), *list_id).await
 }
 
 async fn get_list(info: web::Path<u32>) -> impl Responder {
