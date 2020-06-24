@@ -11,6 +11,9 @@
     }
     list.tasks = [...list.tasks, todo];
 
+    task = task.replace(/'/g, "\\'");
+    if (details) details = details.replace(/'/g, "\\'");
+
     let uri = `/list/${list.id}?id=0&task=${encodeURIComponent(task)}`;
     if (details) uri += `&details=${encodeURIComponent(details)}`;
     uri += `&completed=false`;
