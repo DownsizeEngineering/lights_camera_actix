@@ -18,7 +18,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     .service(
         web::resource("/todo/{todo_id}")
             .route(web::get().to(get_todo))
-            // .route(web::patch().to(update_todo))
+            .route(web::patch().to(update_complete))
             // .route(web::delete().to(delete_todo))
     );
 }
@@ -28,8 +28,8 @@ struct NewTodoList {
     name: String,
 }
 
-async fn new_list(db: web::Data<PGA>, form: web::Query<NewTodoList>)
--> impl Responder {
+async fn new_list(db: web::Data<PGA>, form: web::Query<NewTodoList>
+) -> impl Responder {
     let new_list = TodoList::new(form.into_inner().name);
     todo::new_list(db, new_list).await
 }
@@ -53,4 +53,16 @@ async fn get_list(info: web::Path<u32>) -> impl Responder {
 
 async fn get_todo(info: web::Path<u32>) -> impl Responder {
     HttpResponse::Ok().body(format!("get todo {}", info))
+}
+
+#[derive(Deserialize)]
+struct Status {
+    status: bool,
+}
+async fn update_complete(
+    db: web::Data<PGA>,
+    todo_id: web::Path<u32>, 
+    status: web::Query<Status>
+) -> impl Responder {
+    todo::update_complete(db, *todo_id, status.into_inner().status).await
 }
