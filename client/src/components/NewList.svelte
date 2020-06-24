@@ -1,7 +1,8 @@
 <script>
 let newListName;
+export let post;
 const handleSubmit = function() {
-  alert(`sending a new list named ${newListName}!`);
+  post(newListName);
 }
 </script> 
 <h1>New List:</h1>
