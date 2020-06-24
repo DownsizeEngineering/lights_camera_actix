@@ -1,5 +1,6 @@
 use actix_web::{web, Responder, HttpResponse};
 use crate::db::{todo, PGA, todo::TodoList, todo::Todo};
+use serde::Deserialize;
 
 
 pub fn config(cfg: &mut web::ServiceConfig) {
@@ -22,9 +23,15 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     );
 }
 
-async fn new_list(db: web::Data<PGA>, form: web::Form<TodoList>)
+#[derive(Deserialize)]
+struct NewTodoList {
+    name: String,
+}
+
+async fn new_list(db: web::Data<PGA>, form: web::Query<NewTodoList>)
 -> impl Responder {
-    todo::new_list(db, form.into_inner()).await
+    let new_list = TodoList::new(form.into_inner().name);
+    todo::new_list(db, new_list).await
 }
 
 async fn get_all_lists(db: web::Data<PGA>) -> impl Responder {
