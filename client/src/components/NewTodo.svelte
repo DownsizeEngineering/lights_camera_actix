@@ -4,6 +4,8 @@
   let details = "";
   const handleSubmit = function() {
     post(task, details);
+    task = "";
+    details = "";
   }
 
 </script> 
