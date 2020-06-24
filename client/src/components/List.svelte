@@ -1,6 +1,7 @@
 <script>
   import Todo from './Todo.svelte';
   import NewTodo from './NewTodo.svelte';
+  import sanitizeHTML from '../Sanitize';
   export let list;
 
   let newTodo = function(task, details) {
@@ -22,6 +23,7 @@
     fetch(uri, {method: 'POST'}).then((res) => (res.body.getReader().read()))
     .then((res) => {todo.id = parseInt(td_utf8.decode(res.value));});
   }
+  list.name = sanitizeHTML(list.name);
 </script>
 
 <ol>
