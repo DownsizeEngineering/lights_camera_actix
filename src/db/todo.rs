@@ -32,11 +32,15 @@ pub async fn get_all_lists(db: web::Data<PGA>) -> impl Responder {
     
     let mut lists: Vec<TodoList> = Vec::new();
     for row in rows {
-        lists.push(TodoList {
+        println!("say something");
+        let list = TodoList {
             id: row.get(0),
             name: row.get(1),
             tasks: Vec::new(),
-        });
+        };
+        println!("{:?}", list);
+        lists.push(list);
+        println!("tried pushing to the list, len: {}", lists.len());
     }
     
     let rows = pg_query(db.get_ref(), "SELECT * FROM done.todos").await;
@@ -95,4 +99,15 @@ pub async fn new_todo(
     
     let id: i32 = res[0].get(0);
     HttpResponse::Ok().body(format!("{}", id))
+}
+
+pub async fn update_complete(
+    db: web::Data<PGA>, 
+    todo_id: u32, 
+    status: bool
+) -> impl Responder {
+    pg_query(db.get_ref(), 
+        &format!("UPDATE done.todos SET completed={} WHERE id={}",
+        status, todo_id)).await;
+    HttpResponse::Ok().body(format!("{}", status))
 }
