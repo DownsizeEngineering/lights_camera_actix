@@ -13,5 +13,5 @@ CREATE TABLE done.todos (
     completed BOOLEAN NOT NULL,
     list INTEGER NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (list) REFERENCES done.lists (id)
+    FOREIGN KEY (list) REFERENCES done.lists (id) ON DELETE CASCADE
 );
