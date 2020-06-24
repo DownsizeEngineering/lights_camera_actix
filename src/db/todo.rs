@@ -1,8 +1,9 @@
 use actix_web::{web, HttpResponse, Responder};
 use super::{pg_query, PGA};
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct TodoList {
     id: i32,
     name: String,
@@ -19,7 +20,7 @@ impl TodoList {
     }
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Todo {
         id: i32,
         task: String,
@@ -28,26 +29,24 @@ pub struct Todo {
 }
 
 pub async fn get_all_lists(db: web::Data<PGA>) -> impl Responder {
-    let rows = pg_query(db.get_ref(), "SELECT * FROM done.lists").await;
+    let rows = pg_query(db.get_ref(), "SELECT * FROM done.lists;").await;
     
-    let mut lists: Vec<TodoList> = Vec::new();
+    let mut lists: HashMap<i32, TodoList> = HashMap::new();
     for row in rows {
-        println!("say something");
         let list = TodoList {
             id: row.get(0),
             name: row.get(1),
             tasks: Vec::new(),
         };
-        println!("{:?}", list);
-        lists.push(list);
-        println!("tried pushing to the list, len: {}", lists.len());
+        lists.insert(list.id, list);
     }
     
-    let rows = pg_query(db.get_ref(), "SELECT * FROM done.todos").await;
+    let rows = pg_query(db.get_ref(), 
+        "SELECT * FROM done.todos ORDER BY id ASC;"
+    ).await;
     for row in rows {
         let list:i32 = row.get(4);
-        let list = list as usize - 1;
-        lists[list].tasks.push(Todo {
+        lists.get_mut(&list).unwrap().tasks.push(Todo {
             id: row.get(0),
             task: row.get(1),
             details: match row.try_get(2) {
@@ -58,7 +57,18 @@ pub async fn get_all_lists(db: web::Data<PGA>) -> impl Responder {
         });
     }
 
-    web::Json(lists)
+    let mut list_indexes: Vec<i32> = Vec::new();
+    for list in lists.iter() {
+        list_indexes.push(list.0.clone());
+    }
+    list_indexes.sort();
+
+    let mut lists_vec: Vec<TodoList> = Vec::new();
+    for index in list_indexes {
+        lists_vec.push(lists.get(&index).unwrap().clone());
+    }
+
+    web::Json(lists_vec)
 }
 
 pub async fn new_list(db: web::Data<PGA>, list: TodoList) -> impl Responder {
