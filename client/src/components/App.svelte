@@ -23,7 +23,24 @@
       ]
     }
   ];
+
   const td_utf8 = new TextDecoder("utf-8");
+
+  const newList = function(name) {
+    if (name == "") return;
+    let list = {
+      name,
+      tasks: [],
+    }
+    lists = [...lists, list]
+
+    name = name.replace(/'/g, "\\'");
+    let uri = `/list?name=${encodeURIComponent(name)}`;
+
+    fetch(uri, {method: 'POST'}).then((res) => (res.body.getReader().read()))
+    .then((res) => {list.id = parseInt(td_utf8.decode(res.value));});
+  }
+
   fetch("/list").then((res) => (res.body.getReader().read()))
   .then((res) => {lists = JSON.parse(td_utf8.decode(res.value));});
 </script>
@@ -32,4 +49,4 @@
 {#each lists as list}
     <List list={list}/>
 {/each}
-<NewList/>
+<NewList post={newList.bind(this)}/>
