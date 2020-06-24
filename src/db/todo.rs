@@ -9,6 +9,16 @@ pub struct TodoList {
     tasks: Vec<Todo>,
 }
 
+impl TodoList {
+    pub fn new (name: String) -> Self {
+        TodoList {
+            id: 0,
+            name,
+            tasks: Vec::new(),
+        }
+    }
+}
+
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Todo {
         id: i32,
@@ -49,7 +59,7 @@ pub async fn get_all_lists(db: web::Data<PGA>) -> impl Responder {
 
 pub async fn new_list(db: web::Data<PGA>, list: TodoList) -> impl Responder {
     let res = pg_query(db.get_ref(), 
-        &format!("INSERT INTO done.lists (name) VALUES ('{}') RETURNING (id);", 
+        &format!("INSERT INTO done.lists (name) VALUES (E'{}') RETURNING (id);", 
         list.name)
     ).await;
     let id: i32 = res[0].get(0);
@@ -65,7 +75,7 @@ pub async fn new_todo(
         Some(details) => {
             pg_query(db.get_ref(),
                 &format!("INSERT INTO done.todos (task, details, completed, list) 
-                    VALUES ('{}', '{}', {}, {}) RETURNING (id);", 
+                    VALUES (E'{}', E'{}', {}, {}) RETURNING (id);", 
                     todo.task, 
                     details,
                     todo.completed, list_id
@@ -75,7 +85,7 @@ pub async fn new_todo(
         None => {
             pg_query(db.get_ref(),
                 &format!("INSERT INTO done.todos (task, completed, list) 
-                    VALUES ('{}', {}, {}) RETURNING (id);", 
+                    VALUES (E'{}', {}, {}) RETURNING (id);", 
                     todo.task,
                     todo.completed, list_id
                 )
