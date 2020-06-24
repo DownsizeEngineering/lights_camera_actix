@@ -3,7 +3,6 @@
   let task = "";
   let details = "";
   const handleSubmit = function() {
-    // alert(`sending a new todo named ${task} for list ${list.id}!`);
     post(task, details);
   }
 
