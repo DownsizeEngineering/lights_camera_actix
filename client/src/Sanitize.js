@@ -7,5 +7,5 @@
 export default function (str) {
 	var temp = document.createElement('div');
 	temp.textContent = str;
-	return temp.innerHTML;
+	return temp.innerHTML.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 };
