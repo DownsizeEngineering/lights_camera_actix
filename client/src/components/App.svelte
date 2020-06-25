@@ -28,6 +28,7 @@
 
   const fetchLists = new Promise((resolve, reject) => {
     fetch("/list").then((res) => (res.body.getReader().read()))
+    .catch((error) => reject(error))
     .then((res) => resolve(JSON.parse(td_utf8.decode(res.value))))
     .catch((error) => reject(error));
   });
