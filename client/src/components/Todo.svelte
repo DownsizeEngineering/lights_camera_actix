@@ -9,7 +9,6 @@
     if (clickable === false) {return}
     clickable = false;
     todo.completed = status;
-    todo = todo;
 
     let uri = `./todo/${todo.id}?status=${status}`;
     fetch(uri, {method: 'PATCH'}).then((res) => {
