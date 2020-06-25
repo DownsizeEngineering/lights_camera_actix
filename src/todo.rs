@@ -11,7 +11,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(web::scope("/{list_id}")
                 .route("", web::post().to(new_todo))
                 .route("", web::get().to(get_list))
-                // .route("", web::delete().to(delete_list))
+                .route("", web::delete().to(delete_list))
                 // .route("", web::patch().to(rename_list))
             )
     )
@@ -19,7 +19,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
         web::resource("/todo/{todo_id}")
             .route(web::get().to(get_todo))
             .route(web::patch().to(update_complete))
-            // .route(web::delete().to(delete_todo))
+            .route(web::delete().to(delete_todo))
     );
 }
 
@@ -65,4 +65,18 @@ async fn update_complete(
     status: web::Query<Status>
 ) -> impl Responder {
     todo::update_complete(db, *todo_id, status.into_inner().status).await
+}
+
+async fn delete_todo(
+    db: web::Data<PGA>,
+    todo_id: web::Path<u32>
+) ->impl Responder {
+    todo::delete_todo(db, *todo_id).await
+}
+
+async fn delete_list(
+    db: web::Data<PGA>,
+    list_id: web::Path<u32>
+) ->impl Responder {
+    todo::delete_list(db, *list_id).await
 }

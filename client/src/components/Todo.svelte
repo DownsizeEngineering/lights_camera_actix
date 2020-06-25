@@ -17,8 +17,6 @@
   checkboxBind = checkboxBind.bind(this);
 </script>
 
-<li>
   {todo.task}
   <input type=checkbox bind:checked={todo.completed}
    on:click={checkboxBind}/>
-</li>

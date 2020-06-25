@@ -121,3 +121,17 @@ pub async fn update_complete(
         status, todo_id)).await;
     HttpResponse::Ok().body(format!("{}", status))
 }
+
+pub async fn delete_todo(db: web::Data<PGA>, todo_id: u32) -> impl Responder{
+    pg_query(db.get_ref(),
+    &format!("DELETE FROM done.todos WHERE (id = {});", todo_id)
+    ).await;
+    HttpResponse::Ok().body("")
+}
+
+pub async fn delete_list(db: web::Data<PGA>, list_id: u32) -> impl Responder{
+    pg_query(db.get_ref(),
+    &format!("DELETE FROM done.lists WHERE (id = {});", list_id)
+    ).await;
+    HttpResponse::Ok().body("")
+}
