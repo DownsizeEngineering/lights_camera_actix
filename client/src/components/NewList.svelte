@@ -1,10 +1,10 @@
 <script>
-let newListName;
-export let post;
-const handleSubmit = function() {
-  post(newListName);
-  newListName = "";
-}
+  let newListName;
+  export let post;
+  const handleSubmit = function() {
+    post(newListName);
+    newListName = "";
+  }
 </script> 
 <h1>New List:</h1>
 <form on:submit|preventDefault={handleSubmit}>
