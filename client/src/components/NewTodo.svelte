@@ -28,9 +28,9 @@
     task = "";
     details = "";
   }
-
 </script> 
-<h1>New Todo:</h1>
+
+<h2>New Todo:</h2>
 <form on:submit|preventDefault={handleSubmit.bind(this)}>
   <label>Name</label>
   <input type="text" bind:value={task}/>
