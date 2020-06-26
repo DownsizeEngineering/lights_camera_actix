@@ -18,6 +18,14 @@
     lists = lists;
   }
 </script>
+
+<style>
+  button {
+    background-color: red;
+    border: none;
+  }
+</style>
+
   {#if lists === undefined}
   <p>loading lists...</p>
   {:else}
@@ -27,3 +35,4 @@
     {/each}
     <NewList bind:lists={lists}/>
 {/if}
+

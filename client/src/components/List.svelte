@@ -13,6 +13,13 @@
     list = list;
   }
 </script>
+
+<style>
+ol {
+  border: 1px solid black;
+}
+</style>
+
 <ol>
 <lh>{list.name}</lh>
 {#each list.tasks as todo}
