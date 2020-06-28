@@ -24,14 +24,20 @@
     background-color: red;
     border: none;
   }
+
+  .list {
+    border: 1px solid black;
+  }
 </style>
 
   {#if lists === undefined}
   <p>loading lists...</p>
   {:else}
     {#each lists as list}
+    <div class="list">
       <button on:click={deleteList.bind(this, list)}>x</button>
       <List list={list}/>
+    </div>
     {/each}
     <NewList bind:lists={lists}/>
 {/if}
