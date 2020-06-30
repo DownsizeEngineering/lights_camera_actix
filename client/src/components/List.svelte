@@ -14,6 +14,18 @@
   }
 </script>
 
+<style>
+  li:nth-child(even) {
+    background-color: grey;
+  }
+  li:nth-child(odd){
+    background-color: lightgrey;
+  }
+  button {
+    background-color: red;
+  }
+</style>
+
 <ol>
 <lh>{list.name}</lh>
 {#each list.tasks as todo}
