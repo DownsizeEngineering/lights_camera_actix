@@ -26,13 +26,24 @@
   }
 
   .list {
+    width: 300px;
     border: 1px solid black;
+  }
+
+  .todoLists {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .todoLists * {
+    display: block;
   }
 </style>
 
   {#if lists === undefined}
   <p>loading lists...</p>
   {:else}
+    <div class="todoLists">
     {#each lists as list}
     <div class="list">
       <button on:click={deleteList.bind(this, list)}>x</button>
@@ -40,5 +51,6 @@
     </div>
     {/each}
     <NewList bind:lists={lists}/>
+    </div>
 {/if}
 

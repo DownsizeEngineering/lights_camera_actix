@@ -25,8 +25,15 @@
   }
 </script> 
 
-<h1>New List:</h1>
-<form on:submit|preventDefault={handleSubmit}>
-  <label>Name</label>
-  <input type="text" bind:value={newListName}/>
+<style>
+div {
+  display: block;
+}
+</style>
+<div>
+  <h1>New List:</h1>
+  <form on:submit|preventDefault={handleSubmit}>
+    <label>Name</label>
+    <input type="text" bind:value={newListName}/>
 </form>
+</div>
